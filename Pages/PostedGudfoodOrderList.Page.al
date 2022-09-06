@@ -6,7 +6,7 @@ page 50024 "Posted Gudfood Order List"
     SourceTable = "Posted Gudfood Order Header";
     ApplicationArea = All;
     UsageCategory = Lists;
-    ModifyAllowed = false;
+    Editable = false;
 
     layout
     {

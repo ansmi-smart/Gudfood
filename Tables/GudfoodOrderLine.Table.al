@@ -7,7 +7,6 @@ table 50016 "Gudfood Order Line"
         field(1; "Order No."; Code[20])
         {
             Caption = 'Order No.';
-            TableRelation = "Gudfood Order Header".No;
         }
         field(2; "Line No."; Integer)
         {
@@ -21,6 +20,7 @@ table 50016 "Gudfood Order Line"
         field(4; "Date Created"; Date)
         {
             Caption = 'Date Created';
+            Editable = false;
         }
         field(5; "Item No."; Code[20])
         {
@@ -51,9 +51,11 @@ table 50016 "Gudfood Order Line"
         field(6; "Item Type"; Option)
         {
             Caption = 'Item Type';
+            InitValue = " ";
             FieldClass = FlowField;
             CalcFormula = Lookup("Gudfood Item".Type WHERE(Code = FIELD("Item No.")));
-            OptionMembers = "Salat","Burger","Capcake","Drink";
+            OptionMembers = "Salat","Burger","Capcake","Drink"," ";
+            Editable = false;
         }
         field(7; Description; Text[100])
         {
@@ -164,6 +166,7 @@ table 50016 "Gudfood Order Line"
 
     end;
 
+    [IntegrationEvent(true, false)]
     local procedure OnAfterCreateDimTableIDs(VAR GudfoodOrderLine: Record "Gudfood Order Line"; CallingFieldNo: Integer; VAR TableID: ARRAY[10] OF Integer; VAR Code: ARRAY[10] OF Code[20])
     begin
     end;

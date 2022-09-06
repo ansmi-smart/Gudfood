@@ -18,12 +18,14 @@ report 50021 "Gudfood Order"
             column(SelltoCustomerName; "Sell- to Customer Name")
             {
             }
-            column(PrinterPerson; PrinterPerson)
+            column(PrinterPerson; Database.UserId)
             {
 
             }
             dataitem(GudfoodOrderLine; "Gudfood Order Line")
             {
+                DataItemLink = "Order No." = FIELD(No);
+
                 column(ItemNo; "Item No.")
                 {
 
@@ -48,18 +50,7 @@ report 50021 "Gudfood Order"
                 {
 
                 }
-                trigger OnPreDataItem()
-                begin
-                    GudfoodOrderLine.SetRange("Sell- to Customer No.", GudfoodOrderHeader."Sell- to Customer No.");
-                end;
             }
         }
     }
-    var
-        PrinterPerson: Text;
-
-    trigger OnPreReport()
-    begin
-        PrinterPerson := Database.UserId;
-    end;
 }

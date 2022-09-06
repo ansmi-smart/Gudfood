@@ -1,7 +1,7 @@
 page 50020 "Gudfood Order"
 {
     Caption = 'Gudfood Order';
-    PageType = Card;
+    PageType = Document;
     SourceTable = "Gudfood Order Header";
 
     layout
@@ -71,14 +71,13 @@ page 50020 "Gudfood Order"
                     ToolTip = 'Specifies the value of the Dimension Set ID field.';
                 }
             }
-            group("Order Lines")
+
+            part(OrderLines; "Gudfood Order Subpage")
             {
-                part(OrderLines; "Gudfood Order Subpage")
-                {
-                    ApplicationArea = All;
-                    SubPageLink = "Order No." = FIELD(No);
-                }
+                ApplicationArea = All;
+                SubPageLink = "Order No." = FIELD(No);
             }
+
         }
     }
 
@@ -89,6 +88,7 @@ page 50020 "Gudfood Order"
             action("Post")
             {
                 Image = Post;
+                Caption = 'Post order';
                 trigger OnAction()
                 begin
                     IF Rec.No <> '' THEN BEGIN
@@ -111,6 +111,7 @@ page 50020 "Gudfood Order"
             action("Print")
             {
                 Image = Print;
+                Caption = 'Print report';
                 trigger OnAction()
                 begin
                     REPORT.PRINT(50021, REPORT.RUNREQUESTPAGE(50021));
@@ -119,6 +120,7 @@ page 50020 "Gudfood Order"
             action("Export Order")
             {
                 Image = Export;
+                Caption = 'Export Order';
                 trigger OnAction()
                 begin
                     CurrPage.SETSELECTIONFILTER(GudfoodOrderHeader);
@@ -128,6 +130,7 @@ page 50020 "Gudfood Order"
             action(Dimensions)
             {
                 Image = Dimensions;
+                Caption = 'Dimensions';
                 trigger OnAction()
                 begin
                     Rec.ShowDocDim;

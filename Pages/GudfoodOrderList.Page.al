@@ -1,7 +1,7 @@
 page 50021 "Gudfood Order List"
 {
     Caption = 'Gudfood Order List';
-    ModifyAllowed = false;
+    Editable = false;
     PageType = List;
     CardPageId = "Gudfood Order";
     SourceTable = "Gudfood Order Header";
@@ -21,6 +21,7 @@ page 50021 "Gudfood Order List"
                 }
                 field("Sell- to Customer No."; Rec."Sell- to Customer No.")
                 {
+                    TableRelation = Customer;
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Sell- to Customer No. field.';
                 }

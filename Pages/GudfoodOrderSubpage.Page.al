@@ -47,21 +47,6 @@ page 50017 "Gudfood Order Subpage"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Amount field.';
                 }
-                field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Shortcut Dimension 1 Code field.';
-                }
-                field("Shortcut Dimension 2 Code"; Rec."Shortcut Dimension 2 Code")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Shortcut Dimension 2 Code field.';
-                }
-                field("Dimension Set ID"; Rec."Dimension Set ID")
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Dimension Set ID field.';
-                }
             }
         }
     }
@@ -70,16 +55,6 @@ page 50017 "Gudfood Order Subpage"
     {
         area(Processing)
         {
-            action("XML Export")
-            {
-                Image = Export;
-                trigger OnAction()
-                begin
-                    CurrPage.SETSELECTIONFILTER(GudfoodOrderLine);
-                    XMLPORT.RUN(50050, FALSE, FALSE, GudfoodOrderLine);
-                end;
-            }
-
             action("Dimensions")
             {
                 Image = Dimensions;

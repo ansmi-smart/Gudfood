@@ -6,7 +6,7 @@ page 50012 "Gudfood Item List"
     CardPageId = "Gudfood Item Card";
     ApplicationArea = All;
     UsageCategory = Lists;
-    ModifyAllowed = false;
+    Editable = false;
 
     layout
     {

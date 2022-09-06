@@ -7,7 +7,7 @@ table 50015 "Gudfood Order Header"
     {
         field(1; No; Code[20])
         {
-            Caption = 'No';
+            Caption = 'No.';
 
             trigger OnValidate()
             begin
@@ -56,7 +56,7 @@ table 50015 "Gudfood Order Header"
 
             trigger OnValidate()
             begin
-                "Date Created" := System.Today;
+                "Date Created" := Today;
             end;
         }
         field(7; "Total Qty"; Decimal)
@@ -77,7 +77,7 @@ table 50015 "Gudfood Order Header"
         {
             Caption = 'Shortcut Dimension 1 Code';
             CaptionClass = '1,2,1';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            TableRelation = "Dimension Value"."Code" WHERE("Global Dimension No." = CONST(1));
 
             trigger OnValidate()
             begin
@@ -88,7 +88,7 @@ table 50015 "Gudfood Order Header"
         {
             Caption = 'Shortcut Dimension 2 Code';
             CaptionClass = '1,2,1';
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            TableRelation = "Dimension Value"."Code" WHERE("Global Dimension No." = CONST(2));
 
             trigger OnValidate()
             begin

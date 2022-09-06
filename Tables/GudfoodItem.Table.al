@@ -120,6 +120,7 @@ table 50011 "Gudfood Item"
         END;
     end;
 
+    [IntegrationEvent(true, false)]
     local procedure OnBeforeValidateShortcutDimCode(VAR GudfoodItem: Record "Gudfood Item"; FieldNumber: Integer; VAR ShortcutDimCode: Code[20]; VAR IsHandled: Boolean)
     begin
     end;

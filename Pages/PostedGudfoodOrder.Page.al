@@ -3,7 +3,7 @@ page 50022 "Posted Gudfood Order "
     Caption = 'Posted Gudfood Order ';
     PageType = Card;
     SourceTable = "Posted Gudfood Order Header";
-    ModifyAllowed = false;
+    Editable = false;
 
     layout
     {
@@ -69,6 +69,7 @@ page 50022 "Posted Gudfood Order "
             }
             part(PosterGudfoodOrderLines; "Posted Gudfood Order SubPage")
             {
+                SubPageLink = "Order No." = FIELD(No);
             }
         }
     }
