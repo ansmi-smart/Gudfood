@@ -14,7 +14,7 @@ page 50021 "Gudfood Order List"
         {
             repeater(General)
             {
-                field(No; Rec.No)
+                field(No; Rec."No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the No field.';

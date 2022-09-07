@@ -6,7 +6,7 @@ table 50018 "Posted Gudfood Order Header"
 
     fields
     {
-        field(1; No; Code[20])
+        field(1; "No."; Code[20])
         {
             Caption = 'No';
         }
@@ -32,7 +32,7 @@ table 50018 "Posted Gudfood Order Header"
                 IF "Posting No." <> xRec."Posting No." THEN BEGIN
                     SalesReceivablesSetup.GET;
                     NoSeriesMgt.TestManual(SalesReceivablesSetup."Gudfood Order Nos.");
-                    No := '';
+                    "No." := '';
                 END;
             end;
         }
@@ -44,13 +44,13 @@ table 50018 "Posted Gudfood Order Header"
         {
             Caption = 'Total Qty';
             FieldClass = FlowField;
-            CalcFormula = Sum("Gudfood Order Line".Quantity WHERE("Order No." = FIELD(No)));
+            CalcFormula = Sum("Gudfood Order Line".Quantity WHERE("Order No." = FIELD("No.")));
         }
         field(8; "Total Amount"; Decimal)
         {
             Caption = 'Total Amount';
             FieldClass = FlowField;
-            CalcFormula = Sum("Gudfood Order Line".Amount WHERE("Order No." = FIELD(No)));
+            CalcFormula = Sum("Gudfood Order Line".Amount WHERE("Order No." = FIELD("No.")));
         }
         field(9; "Shortcut Dimension 1 Code"; Code[20])
         {
@@ -73,7 +73,7 @@ table 50018 "Posted Gudfood Order Header"
     }
     keys
     {
-        key(PK; No)
+        key(PK; "No.")
         {
             Clustered = true;
         }

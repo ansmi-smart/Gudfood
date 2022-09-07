@@ -9,8 +9,8 @@ xmlport 50050 "Export Gudfood Order"
         {
             tableelement(GudfoodOrderHeader; "Gudfood Order Header")
             {
-                RequestFilterFields = No;
-                fieldelement(No; GudfoodOrderHeader.No)
+                RequestFilterFields = "No.";
+                fieldelement(No; GudfoodOrderHeader."No.")
                 {
                 }
                 fieldelement(SelltoCustomerNo; GudfoodOrderHeader."Sell- to Customer No.")
@@ -37,7 +37,7 @@ xmlport 50050 "Export Gudfood Order"
                 tableelement(GudfoodOrderLine; "Gudfood Order Line")
                 {
                     LinkTable = GudfoodOrderHeader;
-                    LinkFields = "Order No." = FIELD("No");
+                    LinkFields = "Order No." = FIELD("No.");
                     fieldelement(OrderNo; GudfoodOrderLine."Order No.")
                     {
                     }
@@ -71,7 +71,7 @@ xmlport 50050 "Export Gudfood Order"
                 }
                 trigger OnPreXmlItem()
                 begin
-                    IF GudfoodOrderLine."Order No." <> GudfoodOrderHeader.No THEN
+                    IF GudfoodOrderLine."Order No." <> GudfoodOrderHeader."No." THEN
                         currXMLport.SKIP;
                 end;
             }
@@ -79,7 +79,7 @@ xmlport 50050 "Export Gudfood Order"
     }
     trigger OnInitXmlPort()
     begin
-        IF GudfoodOrderLine."Order No." <> GudfoodOrderHeader.No THEN
+        IF GudfoodOrderLine."Order No." <> GudfoodOrderHeader."No." THEN
             currXMLport.SKIP;
     end;
 }

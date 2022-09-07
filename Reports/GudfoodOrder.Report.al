@@ -24,7 +24,7 @@ report 50021 "Gudfood Order"
             }
             dataitem(GudfoodOrderLine; "Gudfood Order Line")
             {
-                DataItemLink = "Order No." = FIELD(No);
+                DataItemLink = "Order No." = FIELD("No.");
 
                 column(ItemNo; "Item No.")
                 {

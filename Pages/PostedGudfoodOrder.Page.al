@@ -11,7 +11,7 @@ page 50022 "Posted Gudfood Order "
         {
             group(General)
             {
-                field(No; Rec.No)
+                field(No; Rec."No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the No field.';
@@ -69,7 +69,7 @@ page 50022 "Posted Gudfood Order "
             }
             part(PosterGudfoodOrderLines; "Posted Gudfood Order SubPage")
             {
-                SubPageLink = "Order No." = FIELD(No);
+                SubPageLink = "Order No." = FIELD("No.");
             }
         }
     }

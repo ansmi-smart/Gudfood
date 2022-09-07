@@ -33,7 +33,7 @@ page 50014 "Gudfood Item Picture"
 
                 trigger OnAction()
                 begin
-                    // ImportFromDevice;
+                    ImportFromDevice;
                 end;
             }
             action(DeletePicture)
@@ -53,35 +53,45 @@ page 50014 "Gudfood Item Picture"
     }
 
     var
-        Camera: Codeunit Camera;
-        [InDataSet]
-        CameraAvailable: Boolean;
+
         DeleteImageQst: Label 'Are you sure you want to delete the picture?';
         SelectPictureTxt: Label 'Select a picture to upload';
-        DeleteExportEnabled: Boolean;
+        OverrideImageQst: Label 'The existing picture will be replaced. Do you want to continue?';
+
         HideActions: Boolean;
 
-    /*   [Scope('OnPrem')]
-       procedure ImportFromDevice()
-       var
-           FileManagement: Codeunit "File Management";
-           FileName: Text;
-           ClientFileName: Text;
-       begin
-           Rec.Find;
-           Rec.TestField(Code);
+    [Scope('OnPrem')]
+    procedure ImportFromDevice()
+    var
+        FileManagement: Codeunit "File Management";
+        FileName: Text;
+        ClientFileName: Text;
+        sf: page "Item Picture";
+    begin
+        Rec.Find;
+        Rec.TestField(Code);
 
-           ClientFileName := '';
-           FileName := FileManagement.UploadFile(SelectPictureTxt, ClientFileName);
-           if FileName = '' then
-               Error('');
+        if Picture.HasValue then
+            if not Confirm(OverrideImageQst) then
+                Error('');
 
-           Clear(Rec.Picture);
-           Rec.Picture.ImportFile(FileName, ClientFileName);
-           Rec.Modify(true);
+        ClientFileName := '';
+        FileName := FileManagement.UploadFile(SelectPictureTxt, ClientFileName);
+        if FileName = '' then
+            Error('');
 
-           if FileManagement.DeleteServerFile(FileName) then;
-       end;*/
+        Clear(Rec.Picture);
+        Rec.Picture.ImportFile(FileName, ClientFileName);
+        Rec.Modify(true);
+        OnImportFromDeviceOnAfterModify(Rec);
+
+        if FileManagement.DeleteServerFile(FileName) then;
+    end;
+
+    [IntegrationEvent(false, false)]
+    local procedure OnImportFromDeviceOnAfterModify(var GudfoodItem: Record "Gudfood Item")
+    begin
+    end;
 
     procedure DeleteItemPicture()
     begin

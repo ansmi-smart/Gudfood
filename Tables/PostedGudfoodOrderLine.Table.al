@@ -6,7 +6,7 @@ table 50019 "Posted Gudfood Order Line"
         field(1; "Order No."; Code[20])
         {
             Caption = 'Order No.';
-            TableRelation = "Gudfood Order Header".No;
+            TableRelation = "Gudfood Order Header"."No.";
         }
         field(2; "Line No."; Integer)
         {

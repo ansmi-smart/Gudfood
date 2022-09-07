@@ -5,13 +5,13 @@ table 50015 "Gudfood Order Header"
 
     fields
     {
-        field(1; No; Code[20])
+        field(1; "No."; Code[20])
         {
             Caption = 'No.';
 
             trigger OnValidate()
             begin
-                IF No <> xRec.No THEN BEGIN
+                IF "No." <> xRec."No." THEN BEGIN
                     SalesReceivablesSetup.GET;
                     NoSeriesMgt.TestManual(SalesReceivablesSetup."Gudfood Order Nos.");
                     "Posting No." := '';
@@ -19,7 +19,7 @@ table 50015 "Gudfood Order Header"
 
                 CreateDim(
                     DATABASE::Customer, "Sell- to Customer No.",
-                    DATABASE::"Gudfood Order Header", No);
+                    DATABASE::"Gudfood Order Header", "No.");
 
             end;
         }
@@ -64,14 +64,14 @@ table 50015 "Gudfood Order Header"
             Caption = 'Total Qty';
             Editable = false;
             FieldClass = FlowField;
-            CalcFormula = Sum("Gudfood Order Line".Quantity WHERE("Order No." = FIELD(No)));
+            CalcFormula = Sum("Gudfood Order Line".Quantity WHERE("Order No." = FIELD("No.")));
         }
         field(8; "Total Amount"; Decimal)
         {
             Caption = 'Total Amount';
             Editable = false;
             FieldClass = FlowField;
-            CalcFormula = Sum("Gudfood Order Line".Amount WHERE("Order No." = FIELD(No)));
+            CalcFormula = Sum("Gudfood Order Line".Amount WHERE("Order No." = FIELD("No.")));
         }
         field(9; "Shortcut Dimension 1 Code"; Code[20])
         {
@@ -114,7 +114,7 @@ table 50015 "Gudfood Order Header"
     }
     keys
     {
-        key(PK; No)
+        key(PK; "No.")
         {
             Clustered = true;
         }
@@ -130,15 +130,15 @@ table 50015 "Gudfood Order Header"
     trigger OnInsert()
     begin
         "Date Created" := System.Today;
-        IF No = '' THEN BEGIN
+        IF "No." = '' THEN BEGIN
             SalesReceivablesSetup.GET;
-            NoSeriesMgt.InitSeries(SalesReceivablesSetup."Gudfood Order Nos.", xRec."Posting No.", 0D, No, "Posting No.");
+            NoSeriesMgt.InitSeries(SalesReceivablesSetup."Gudfood Order Nos.", xRec."Posting No.", 0D, "No.", "Posting No.");
         END;
     end;
 
     trigger OnDelete()
     begin
-        GudfoodOrderLine.SETFILTER("Order No.", Rec.No);
+        GudfoodOrderLine.SETFILTER("Order No.", Rec."No.");
         GudfoodOrderLine.FINDSET;
         REPEAT
             GudfoodOrderLine.DELETE;
@@ -151,7 +151,7 @@ table 50015 "Gudfood Order Header"
     begin
         OldDimSetID := "Dimension Set ID";
         DimMgt.ValidateShortcutDimValues(FieldNumber, ShortcutDimCode, "Dimension Set ID");
-        IF No <> '' THEN
+        IF "No." <> '' THEN
             MODIFY;
 
         IF OldDimSetID <> "Dimension Set ID" THEN BEGIN
@@ -183,7 +183,7 @@ table 50015 "Gudfood Order Header"
             EXIT;
 
         GudfoodOrderLine.RESET;
-        GudfoodOrderLine.SETRANGE(GudfoodOrderLine."Order No.", No);
+        GudfoodOrderLine.SETRANGE(GudfoodOrderLine."Order No.", "No.");
         GudfoodOrderLine.LOCKTABLE;
         IF GudfoodOrderLine.FIND('-') THEN
             REPEAT
@@ -244,7 +244,7 @@ table 50015 "Gudfood Order Header"
     local procedure GudFoodLinesExist(): Boolean
     begin
         GudfoodOrderLine.RESET;
-        GudfoodOrderLine.SETRANGE(GudfoodOrderLine."Order No.", No);
+        GudfoodOrderLine.SETRANGE(GudfoodOrderLine."Order No.", "No.");
         EXIT(NOT GudfoodOrderLine.ISEMPTY);
     end;
 
@@ -265,7 +265,7 @@ table 50015 "Gudfood Order Header"
         OldDimSetID := "Dimension Set ID";
         "Dimension Set ID" :=
          DimMgt.EditDimensionSet(
-           "Dimension Set ID", STRSUBSTNO('%1', No),
+           "Dimension Set ID", STRSUBSTNO('%1', "No."),
            "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
         IF OldDimSetID <> "Dimension Set ID" THEN BEGIN
             MODIFY;

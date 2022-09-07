@@ -10,7 +10,7 @@ page 50020 "Gudfood Order"
         {
             group(General)
             {
-                field(No; Rec.No)
+                field(No; Rec."No.")
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the No field.';
@@ -75,7 +75,7 @@ page 50020 "Gudfood Order"
             part(OrderLines; "Gudfood Order Subpage")
             {
                 ApplicationArea = All;
-                SubPageLink = "Order No." = FIELD(No);
+                SubPageLink = "Order No." = FIELD("No.");
             }
 
         }
@@ -91,13 +91,13 @@ page 50020 "Gudfood Order"
                 Caption = 'Post order';
                 trigger OnAction()
                 begin
-                    IF Rec.No <> '' THEN BEGIN
+                    IF Rec."No." <> '' THEN BEGIN
                         PostedGudfoodOrderHeader.INIT;
-                        GudfoodOrderHeader.GET(Rec.No);
+                        GudfoodOrderHeader.GET(Rec."No.");
                         PostedGudfoodOrderHeader.TRANSFERFIELDS(GudfoodOrderHeader, TRUE);
                         PostedGudfoodOrderHeader.INSERT(TRUE);
                         PostedGudfoodOrderLine.INIT;
-                        GudfoodOrderLine.SETFILTER("Order No.", Rec.No);
+                        GudfoodOrderLine.SETFILTER("Order No.", Rec."No.");
                         GudfoodOrderLine.FINDSET;
                         REPEAT
                             PostedGudfoodOrderLine.TRANSFERFIELDS(GudfoodOrderLine, TRUE);
