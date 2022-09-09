@@ -129,11 +129,12 @@ table 50015 "Gudfood Order Header"
 
     trigger OnInsert()
     begin
-        "Date Created" := System.Today;
+        "Date Created" := Today;
         IF "No." = '' THEN BEGIN
             SalesReceivablesSetup.GET;
             NoSeriesMgt.InitSeries(SalesReceivablesSetup."Gudfood Order Nos.", xRec."Posting No.", 0D, "No.", "Posting No.");
         END;
+        "Posting No." := '';
     end;
 
     trigger OnDelete()
