@@ -77,7 +77,7 @@ table 50015 "Gudfood Order Header"
         {
             Caption = 'Shortcut Dimension 1 Code';
             CaptionClass = '1,2,1';
-            TableRelation = "Dimension Value"."Code" WHERE("Global Dimension No." = CONST(1));
+            TableRelation = "Dimension Value"."Code" WHERE(Code = CONST('КЛИЕНТ'));
 
             trigger OnValidate()
             begin

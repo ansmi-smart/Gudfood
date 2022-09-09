@@ -91,21 +91,7 @@ page 50020 "Gudfood Order"
                 Caption = 'Post order';
                 trigger OnAction()
                 begin
-                    IF Rec."No." <> '' THEN BEGIN
-                        PostedGudfoodOrderHeader.INIT;
-                        GudfoodOrderHeader.GET(Rec."No.");
-                        PostedGudfoodOrderHeader.TRANSFERFIELDS(GudfoodOrderHeader, TRUE);
-                        PostedGudfoodOrderHeader.INSERT(TRUE);
-                        PostedGudfoodOrderLine.INIT;
-                        GudfoodOrderLine.SETFILTER("Order No.", Rec."No.");
-                        GudfoodOrderLine.FINDSET;
-                        REPEAT
-                            PostedGudfoodOrderLine.TRANSFERFIELDS(GudfoodOrderLine, TRUE);
-                            PostedGudfoodOrderLine.INSERT(TRUE);
-                        UNTIL GudfoodOrderLine.NEXT = 0;
-                        GudfoodOrderHeader.DELETE(TRUE);
-                    END;
-                    MESSAGE('The order successfully posted!');
+                    GudfoodOrderPost.PostOrder(Rec);
                 end;
             }
             action("Print")
@@ -140,10 +126,6 @@ page 50020 "Gudfood Order"
         }
     }
     var
-        SalesReceivablesSetup: Record "Sales & Receivables Setup";
-        PostedGudfoodOrderLine: Record "Posted Gudfood Order Line";
-        GudfoodOrderLine: Record "Gudfood Order Line";
-        PostedGudfoodOrderHeader: Record "Posted Gudfood Order Header";
         GudfoodOrderHeader: Record "Gudfood Order Header";
-        NoSeriesMgt: Codeunit NoSeriesManagement;
+        GudfoodOrderPost: Codeunit GudfoodOrderPost;
 }

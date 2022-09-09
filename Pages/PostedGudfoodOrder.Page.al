@@ -73,4 +73,21 @@ page 50022 "Posted Gudfood Order "
             }
         }
     }
+    actions
+    {
+        area(Processing)
+        {
+            action(Dimensions)
+            {
+                Image = Dimensions;
+                Caption = 'Dimensions';
+                trigger OnAction()
+                begin
+                    Rec.ShowDocDim;
+                    CurrPage.SAVERECORD;
+                end;
+            }
+        }
+    }
 }
+

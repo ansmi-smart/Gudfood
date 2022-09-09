@@ -31,7 +31,7 @@ table 50018 "Posted Gudfood Order Header"
             begin
                 IF "Posting No." <> xRec."Posting No." THEN BEGIN
                     SalesReceivablesSetup.GET;
-                    NoSeriesMgt.TestManual(SalesReceivablesSetup."Gudfood Order Nos.");
+                    NoSeriesMgt.TestManual(SalesReceivablesSetup."Posted Gudfood Item Nos.");
                     "No." := '';
                 END;
             end;
@@ -81,4 +81,71 @@ table 50018 "Posted Gudfood Order Header"
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         NoSeriesMgt: Codeunit "NoSeriesManagement";
+        DimMgt: Codeunit "DimensionManagement";
+        PostedGudfoodOrderLine: Record "Posted Gudfood Order Line";
+
+    procedure ShowDocDim()
+    var
+        OldDimSetID: Integer;
+    begin
+        OldDimSetID := "Dimension Set ID";
+        "Dimension Set ID" :=
+         DimMgt.EditDimensionSet(
+           "Dimension Set ID", STRSUBSTNO('%1', "No."),
+           "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
+        IF OldDimSetID <> "Dimension Set ID" THEN BEGIN
+            MODIFY;
+            IF PostedGudFoodLinesExist THEN
+                UpdateAllLineDim("Dimension Set ID", OldDimSetID);
+        END;
+    end;
+
+    procedure UpdateAllLineDim(NewParentDimSetID: Integer; OldParentDimSetID: Integer)
+    var
+        NewDimSetID: Integer;
+        ShippedReceivedItemLineDimChangeConfirmed: Boolean;
+        IsHandled: Boolean;
+    begin
+        IsHandled := FALSE;
+        OnBeforeUpdateAllLineDim(Rec, NewParentDimSetID, OldParentDimSetID, IsHandled);
+        IF IsHandled THEN
+            EXIT;
+
+        IF NewParentDimSetID = OldParentDimSetID THEN
+            EXIT;
+
+        PostedGudfoodOrderLine.RESET;
+        PostedGudfoodOrderLine.SETRANGE(PostedGudfoodOrderLine."Order No.", "No.");
+        PostedGudfoodOrderLine.LOCKTABLE;
+        IF PostedGudfoodOrderLine.FIND('-') THEN
+            REPEAT
+                NewDimSetID := DimMgt.GetDeltaDimSetID(PostedGudfoodOrderLine."Dimension Set ID", NewParentDimSetID, OldParentDimSetID);
+                IF PostedGudfoodOrderLine."Dimension Set ID" <> NewDimSetID THEN BEGIN
+                    PostedGudfoodOrderLine."Dimension Set ID" := NewDimSetID;
+
+                    DimMgt.UpdateGlobalDimFromDimSetID(
+                      PostedGudfoodOrderLine."Dimension Set ID", PostedGudfoodOrderLine."Shortcut Dimension 1 Code", PostedGudfoodOrderLine."Shortcut Dimension 2 Code");
+
+                    OnUpdateAllLineDimOnBeforeSalesLineModify(PostedGudfoodOrderLine);
+                    PostedGudfoodOrderLine.MODIFY;
+                END;
+            UNTIL PostedGudfoodOrderLine.NEXT = 0;
+    end;
+
+    local procedure PostedGudFoodLinesExist(): Boolean
+    begin
+        PostedGudfoodOrderLine.RESET;
+        PostedGudfoodOrderLine.SETRANGE(PostedGudfoodOrderLine."Order No.", "No.");
+        EXIT(NOT PostedGudfoodOrderLine.ISEMPTY);
+    end;
+
+    [IntegrationEvent(true, false)]
+    local procedure OnBeforeUpdateAllLineDim(VAR PostedGudfoodOrderHeader: Record "Posted Gudfood Order Header"; NewParentDimSetID: Integer; OldParentDimSetID: Integer; VAR IsHandled: Boolean)
+    begin
+    end;
+
+    [IntegrationEvent(true, false)]
+    local procedure OnUpdateAllLineDimOnBeforeSalesLineModify(VAR PostedGudfoodOrderLine: Record "Posted Gudfood Order Line")
+    begin
+    end;
 }
