@@ -971,14 +971,14 @@
         </trans-unit>
         <trans-unit id="Page 2067450363 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted Gudfood Order List</source>
-          <target>Строка завершенного заказа Gudfood</target>
+          <target>Опубликованный список заказов Gudfood</target>
 
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Posted Gudfood Order List - Property Caption</note>
         </trans-unit>
         <trans-unit id="Page 2067450363 - Control 2972662832 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
           <source>Specifies the value of the Date Created field.</source>
-          <target></target>
+          <target>Указывает значение поля Дата создания.</target>
 
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Posted Gudfood Order List - Control Date Created - Property ToolTip</note>
