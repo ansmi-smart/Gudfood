@@ -12,6 +12,7 @@ codeunit 50022 GudfoodOrderPost
         GudfoodOrderLine: Record "Gudfood Order Line";
         PostedGudfoodOrderHeader: Record "Posted Gudfood Order Header";
         GudfoodOrderHeader: Record "Gudfood Order Header";
+        SuccesedTxt: Label 'The order successfully posted!';
 
     procedure PostOrder(var GudfoodOrder: Record "Gudfood Order Header")
     begin
@@ -29,6 +30,6 @@ codeunit 50022 GudfoodOrderPost
             UNTIL GudfoodOrderLine.NEXT = 0;
             GudfoodOrderHeader.DELETE(TRUE);
         END;
-        MESSAGE('The order successfully posted!');
+        MESSAGE(SuccesedTxt);
     end;
 }
