@@ -14,6 +14,7 @@ page 50021 "Gudfood Order List"
         {
             repeater(General)
             {
+                CaptionML = RUS = 'Общее';
                 field(No; Rec."No.")
                 {
                     ApplicationArea = All;

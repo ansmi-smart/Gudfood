@@ -10,6 +10,7 @@ page 50013 "Gudfood Item Card"
         {
             group(General)
             {
+                CaptionML = RUS = 'Общее';
                 field("Code"; Rec."Code")
                 {
                     ApplicationArea = All;
@@ -43,6 +44,7 @@ page 50013 "Gudfood Item Card"
             }
             group(Orders)
             {
+                CaptionML = RUS = 'Количество в заказах';
                 field("Qty. Ordered"; Rec."Qty. Ordered")
                 {
                     Editable = false;
@@ -54,6 +56,7 @@ page 50013 "Gudfood Item Card"
             }
             group(Dimensions)
             {
+                CaptionML = RUS = 'Измерения';
                 field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
                 {
 
@@ -70,6 +73,7 @@ page 50013 "Gudfood Item Card"
             part(Image; "Gudfood Item Picture")
             {
                 ApplicationArea = All;
+                SubPageLink = Code = field(Code);
             }
             systempart(Links; Links)
             {

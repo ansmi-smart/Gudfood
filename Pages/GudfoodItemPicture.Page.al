@@ -10,6 +10,7 @@ page 50014 "Gudfood Item Picture"
         {
             group(General)
             {
+                CaptionML = RUS = 'Общее';
                 field(Picture; Rec.Picture)
                 {
                     ApplicationArea = All;

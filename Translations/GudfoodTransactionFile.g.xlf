@@ -47,7 +47,7 @@
         </trans-unit>
         <trans-unit id="Table 1903646731 - Field 841303581 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Qty. in Order</source>
-          <target></target>
+          <target>Количество в заказах.</target>
 
           <target>Количество в заказах</target>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -263,7 +263,7 @@
         </trans-unit>
         <trans-unit id="Table 4041849936 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted Gudfood Order Header</source>
-          <target>Заголовок заказа Gudfood</target>
+          <target>Заголовок завершенного заказа Gudfood</target>
 
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Posted Gudfood Order Header - Property Caption</note>
@@ -347,7 +347,7 @@
         </trans-unit>
         <trans-unit id="Table 3631824407 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted Gudfood Order Line</source>
-          <target>Строка заказа Gudfood</target>
+          <target>Строка завершенного заказа Gudfood</target>
 
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Table Posted Gudfood Order Line - Property Caption</note>
@@ -564,7 +564,7 @@
         </trans-unit>
         <trans-unit id="Page 2937229991 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Gudfood Item Picture</source>
-          <target>Указывает значение поля Картинка</target>
+          <target>Картинка товара Gudfood</target>
 
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Item Picture - Property Caption</note>
@@ -710,8 +710,8 @@
           <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Order - Control Total Qty - Property ToolTip</note>
         </trans-unit>
         <trans-unit id="Page 201881534 - Action 2173385693 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
-          <source>Измерения</source>
-          <target></target>
+          <source>Dimensions</source>
+          <target>Измерения</target>
 
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Order - Action Dimensions - Property Caption</note>
@@ -739,7 +739,7 @@
         </trans-unit>
         <trans-unit id="Page 2070028540 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Gudfood Order List</source>
-          <target></target>
+          <target>Список заказов  Gudfood</target>
 
           <target>Список товаров  Gudfood</target>
           <note from="Developer" annotates="general" priority="2"></note>
@@ -880,7 +880,7 @@
         </trans-unit>
         <trans-unit id="Page 3555363701 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted Gudfood Order </source>
-          <target>Заголовок заказа Gudfood</target>
+          <target>Завершенный завершенного заказа Gudfood</target>
 
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Posted Gudfood Order  - Property Caption</note>
@@ -971,7 +971,7 @@
         </trans-unit>
         <trans-unit id="Page 2067450363 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted Gudfood Order List</source>
-          <target>Строка заказа Gudfood</target>
+          <target>Строка завершенного заказа Gudfood</target>
 
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Posted Gudfood Order List - Property Caption</note>
@@ -1055,7 +1055,7 @@
         </trans-unit>
         <trans-unit id="Page 2975664072 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Posted Gudfood Order SubPage</source>
-          <target>Строка заказа Gudfood</target>
+          <target>Строки завершенного заказа Gudfood</target>
 
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Posted Gudfood Order SubPage - Property Caption</note>

@@ -10,6 +10,7 @@ page 50020 "Gudfood Order"
         {
             group(General)
             {
+                CaptionML = RUS = 'Общее';
                 field(No; Rec."No.")
                 {
                     ApplicationArea = All;
@@ -55,6 +56,7 @@ page 50020 "Gudfood Order"
             }
             group(Dimension)
             {
+                CaptionML = RUS = 'Измерения';
                 field("Shortcut Dimension 1 Code"; Rec."Shortcut Dimension 1 Code")
                 {
                     ApplicationArea = All;

@@ -66,6 +66,7 @@ page 50012 "Gudfood Item List"
             part(Image; "Gudfood Item Picture")
             {
                 ApplicationArea = All;
+                SubPageLink = Code = field(Code);
             }
             systempart(Links; Links)
             {

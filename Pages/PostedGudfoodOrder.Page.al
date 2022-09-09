@@ -11,6 +11,7 @@ page 50022 "Posted Gudfood Order "
         {
             group(General)
             {
+                CaptionML = RUS = 'Общее';
                 field(No; Rec."No.")
                 {
                     ApplicationArea = All;
