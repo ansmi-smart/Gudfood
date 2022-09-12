@@ -130,4 +130,5 @@ page 50020 "Gudfood Order"
     var
         GudfoodOrderHeader: Record "Gudfood Order Header";
         GudfoodOrderPost: Codeunit GudfoodOrderPost;
+        DiscountConfirmation: Label 'You ordered lots of items. Do you want to get a 20% discount?';
 }

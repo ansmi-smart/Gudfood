@@ -8,15 +8,12 @@ page 50014 "Gudfood Item Picture"
     {
         area(content)
         {
-            group(General)
+            field(Picture; Rec.Picture)
             {
-                CaptionML = RUS = 'Общее';
-                field(Picture; Rec.Picture)
-                {
-                    ApplicationArea = All;
-                    ToolTip = 'Specifies the value of the Picture field.';
-                }
+                ApplicationArea = All;
+                ToolTip = 'Specifies the value of the Picture field.';
             }
+
         }
     }
     actions

@@ -76,6 +76,11 @@ page 50012 "Gudfood Item List"
             {
                 ApplicationArea = All;
             }
+            part(GudfoodItemStatisticsFactBox; "Gudfood Item Statistics")
+            {
+                ApplicationArea = all;
+                SubPageLink = Code = field(Code);
+            }
         }
     }
 }

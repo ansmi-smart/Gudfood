@@ -1049,6 +1049,18 @@
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">TableExtension SalesReceivablesSetupExt - Field Posted Gudfood Item Nos. - Property Caption</note>
         </trans-unit>
+        <trans-unit id="Table 4222363240 - NamedType 1481297009" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item is expired!</source>
+          <target>Товар просрочен!</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Gudfood Order Line - NamedType Expired</note>
+        </trans-unit>
+        <trans-unit id="Table 4222363240 - NamedType 3229900828" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Item will expire before the date you get your order!</source>
+          <target>Срок действия товара истечет до даты, когда вы получите свой заказ!</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Table Gudfood Order Line - NamedType ExpiredBeforeOrder</note>
+        </trans-unit>
       </group>
     </body>
   </file>

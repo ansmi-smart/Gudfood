@@ -11,6 +11,12 @@ page 50017 "Gudfood Order Subpage"
         {
             repeater(General)
             {
+                field("Order No."; Rec."Order No.")
+                {
+                    ApplicationArea = All;
+                    Visible = IsVisible;
+                    ToolTip = 'Specifies the value of the Order No. field.';
+                }
                 field("Line No."; Rec."Line No.")
                 {
                     ApplicationArea = All;
@@ -70,11 +76,17 @@ page 50017 "Gudfood Order Subpage"
     var
         GudfoodOrderLine: Record "Gudfood Order Line";
         ShortcutDimCode: array[8] of Code[20];
+        IsVisible: Boolean;
 
     procedure ValidateShortcutDimension(DimIndex: Integer)
     begin
         Rec.ValidateShortcutDimCode(DimIndex, ShortcutDimCode[DimIndex]);
         OnAfterValidateShortcutDimCode(Rec, ShortcutDimCode, DimIndex);
+    end;
+
+    procedure ChangeVisable(Status: Boolean)
+    begin
+        IsVisible := Status;
     end;
 
     LOCAL procedure OnAfterValidateShortcutDimCode(VAR GudfoodOrderLine: Record "Gudfood Order Line"; VAR ShortcutDimCode: ARRAY[8] OF Code[20]; DimIndex: Integer)

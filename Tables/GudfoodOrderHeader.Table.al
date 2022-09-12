@@ -140,10 +140,10 @@ table 50015 "Gudfood Order Header"
     trigger OnDelete()
     begin
         GudfoodOrderLine.SETFILTER("Order No.", Rec."No.");
-        GudfoodOrderLine.FINDSET;
-        REPEAT
-            GudfoodOrderLine.DELETE;
-        UNTIL GudfoodOrderLine.NEXT = 0;
+        if GudfoodOrderLine.FINDSET then
+            REPEAT
+                GudfoodOrderLine.DELETE;
+            UNTIL GudfoodOrderLine.NEXT = 0;
     end;
 
     procedure ValidateShortcutDimCode(FieldNumber: Integer; VAR ShortcutDimCode: Code[20])

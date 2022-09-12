@@ -35,7 +35,8 @@ table 50016 "Gudfood Order Line"
                     Description := GudfoodItem.Description;
                     "Unit Price" := GudfoodItem."Unit Price";
                     IF GudfoodItem."Shelf Life" < TODAY THEN
-                        ERROR('Item is expired!');
+                        ERROR(Expired);
+
                     CreateDim(
                     DATABASE::Customer, "Sell- to Customer No.",
                     DATABASE::"Gudfood Item", "Item No.");
@@ -120,9 +121,9 @@ table 50016 "Gudfood Order Line"
     var
         GudfoodOrderHeader: Record "Gudfood Order Header";
         GudfoodItem: Record "Gudfood Item";
-        GudfoodOrderLine: Record "Gudfood Order Line";
         DimMgt: Codeunit "DimensionManagement";
-
+        Expired: Label 'Item is expired!';
+        ExpiredBeforeOrder: Label 'Item will expire before the date you get your order!';
 
     trigger OnInsert()
     begin
@@ -134,6 +135,13 @@ table 50016 "Gudfood Order Line"
             "Sell- to Customer No." := '';
             "Date Created" := 0D;
         END;
+
+        IF (GudfoodOrderHeader."Order Date" <> 0D) then begin
+            GudfoodItem.Get(Rec."Item No.");
+            IF GudfoodItem."Shelf Life" < GudfoodOrderHeader."Order Date" THEN begin
+                ERROR(ExpiredBeforeOrder);
+            end;
+        end;
     end;
 
     procedure ValidateShortcutDimCode(FieldNumber: Integer; VAR ShortcutDimCode: Code[20])
