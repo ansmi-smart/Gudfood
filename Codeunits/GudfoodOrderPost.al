@@ -23,7 +23,8 @@ codeunit 50022 GudfoodOrderPost
             PostedGudfoodOrderHeader."No." := GudfoodOrderHeader."Posting No.";
             PostedGudfoodOrderHeader.INSERT(TRUE);
             if (GudfoodOrderLine.FINDSET) then begin
-                GudfoodOrderLine.SETFILTER("Order No.", GudfoodOrder."No.");
+                GudfoodOrderLine.SetRange("Order No.", GudfoodOrder."No.");
+                GudfoodOrderLine.FINDSET();
                 PostedGudfoodOrderLine.INIT;
                 REPEAT
                     PostedGudfoodOrderLine.TRANSFERFIELDS(GudfoodOrderLine, TRUE);
