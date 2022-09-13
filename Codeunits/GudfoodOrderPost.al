@@ -20,14 +20,18 @@ codeunit 50022 GudfoodOrderPost
             PostedGudfoodOrderHeader.INIT;
             GudfoodOrderHeader.GET(GudfoodOrder."No.");
             PostedGudfoodOrderHeader.TRANSFERFIELDS(GudfoodOrderHeader, TRUE);
+            PostedGudfoodOrderHeader."No." := GudfoodOrderHeader."Posting No.";
             PostedGudfoodOrderHeader.INSERT(TRUE);
-            PostedGudfoodOrderLine.INIT;
-            GudfoodOrderLine.SETFILTER("Order No.", GudfoodOrder."No.");
-            GudfoodOrderLine.FINDSET;
-            REPEAT
-                PostedGudfoodOrderLine.TRANSFERFIELDS(GudfoodOrderLine, TRUE);
-                PostedGudfoodOrderLine.INSERT(TRUE);
-            UNTIL GudfoodOrderLine.NEXT = 0;
+            if (GudfoodOrderLine.FINDSET) then begin
+                GudfoodOrderLine.SETFILTER("Order No.", GudfoodOrder."No.");
+                PostedGudfoodOrderLine.INIT;
+                REPEAT
+                    PostedGudfoodOrderLine.TRANSFERFIELDS(GudfoodOrderLine, TRUE);
+                    PostedGudfoodOrderLine."Order No." := GudfoodOrderHeader."Posting No.";
+                    PostedGudfoodOrderLine.INSERT(TRUE);
+                UNTIL GudfoodOrderLine.NEXT = 0;
+            end;
+
             GudfoodOrderHeader.DELETE(TRUE);
         END;
         MESSAGE(SuccesedTxt);

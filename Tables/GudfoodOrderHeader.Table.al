@@ -126,6 +126,7 @@ table 50015 "Gudfood Order Header"
         NoSeriesMgt: Codeunit "NoSeriesManagement";
         DimMgt: Codeunit "DimensionManagement";
         GudfoodOrderLine: Record "Gudfood Order Line";
+        PostedGudfoorOrder: Record "Posted Gudfood Order Header";
 
     trigger OnInsert()
     begin
@@ -134,7 +135,12 @@ table 50015 "Gudfood Order Header"
             SalesReceivablesSetup.GET;
             NoSeriesMgt.InitSeries(SalesReceivablesSetup."Gudfood Order Nos.", xRec."Posting No.", 0D, "No.", "Posting No.");
         END;
+
         "Posting No." := '';
+        IF "Posting No." = '' THEN BEGIN
+            SalesReceivablesSetup.GET;
+            NoSeriesMgt.InitSeries(SalesReceivablesSetup."Posted Gudfood Item Nos.", PostedGudfoorOrder."No.", 0D, "Posting No.", PostedGudfoorOrder."No.");
+        END;
     end;
 
     trigger OnDelete()

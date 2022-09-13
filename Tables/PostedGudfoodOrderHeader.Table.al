@@ -79,14 +79,6 @@ table 50018 "Posted Gudfood Order Header"
         }
     }
 
-    trigger OnInsert()
-    begin
-        IF "Posting No." = '' THEN BEGIN
-            SalesReceivablesSetup.GET;
-            NoSeriesMgt.InitSeries(SalesReceivablesSetup."Posted Gudfood Item Nos.", Rec."No.", 0D, "Posting No.", xRec."No.");
-        END;
-    end;
-
     var
         SalesReceivablesSetup: Record "Sales & Receivables Setup";
         NoSeriesMgt: Codeunit "NoSeriesManagement";
