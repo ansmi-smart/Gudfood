@@ -7,6 +7,7 @@ pageextension 50042 PostedSalesShipmentPageExt extends "Posted Sales Shipment"
             field("Cust. Post. Description ANSMI"; Rec."Cust. Post. Description ANSMI")
             {
                 ApplicationArea = All;
+                Editable = false;
             }
         }
     }

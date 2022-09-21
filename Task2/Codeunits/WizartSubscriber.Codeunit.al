@@ -1,4 +1,4 @@
-codeunit 50001 WizardSubscriber
+codeunit 50000 WizardSubscriber
 {
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Guided Experience", 'OnRegisterAssistedSetup', '', false, false)]
     local procedure AddFieldInsertionWizard()

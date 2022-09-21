@@ -1,4 +1,4 @@
-tableextension 50001 PurchRcptHeaderExt extends "Purch. Rcpt. Header"
+tableextension 50031 PurchRcptHeaderExt extends "Purch. Rcpt. Header"
 {
     fields
     {

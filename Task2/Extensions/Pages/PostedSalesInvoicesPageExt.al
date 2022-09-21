@@ -7,6 +7,7 @@ pageextension 50038 PostedSalesInvoicesPageExt extends "Posted Sales Invoice"
             field("Cust. Post. Description ANSMI"; Rec."Cust. Post. Description ANSMI")
             {
                 ApplicationArea = All;
+                Editable = false;
             }
         }
     }
