@@ -13,6 +13,7 @@ codeunit 50002 ActionModify
     local procedure OnAfterInsertPostedHeaders(var PurchaseHeader: Record "Purchase Header"; var PurchRcptHeader: Record "Purch. Rcpt. Header"; var PurchInvHeader: Record "Purch. Inv. Header"; var PurchCrMemoHdr: Record "Purch. Cr. Memo Hdr."; var ReturnShptHeader: Record "Return Shipment Header"; var PurchSetup: Record "Purchases & Payables Setup")
     begin
         PurchInvHeader."Lines Counter ANSMI" := PurchaseHeader."Lines Counter ANSMI";
+        PurchInvHeader.Modify();
         PurchRcptHeader."Lines Counter ANSMI" := PurchaseHeader."Lines Counter ANSMI";
         PurchRcptHeader.Modify();
     end;

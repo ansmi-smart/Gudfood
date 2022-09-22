@@ -8,6 +8,7 @@ pageextension 50031 SalesOrderPageExtension extends "Sales Order"
             {
                 ApplicationArea = All;
                 ShowMandatory = true;
+                Editable = false;
             }
         }
 
