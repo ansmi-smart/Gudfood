@@ -7,5 +7,10 @@ tableextension 50057 GenJournalLineTableExt extends "Gen. Journal Line"
             Caption = 'Cust. Post. Description ANSMI';
             DataClassification = ToBeClassified;
         }
+        field(50001; "Lines Counter ANSMI"; Integer)
+        {
+            Caption = 'Lines Counter ANSMI';
+            FieldClass = Normal;
+        }
     }
 }

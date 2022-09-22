@@ -2,11 +2,12 @@ pageextension 50058 PostedPurchaseReceiptPageExt extends "Posted Purchase Receip
 {
     layout
     {
-        addafter(General)
+        addlast(General)
         {
             field("Lines Counter ANSMI"; Rec."Lines Counter ANSMI")
             {
                 ApplicationArea = All;
+                Editable = false;
             }
         }
     }
