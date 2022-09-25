@@ -102,7 +102,7 @@ page 50020 "Gudfood Order"
                 Caption = 'Print report';
                 trigger OnAction()
                 begin
-                    REPORT.PRINT(50021, REPORT.RUNREQUESTPAGE(50021));
+                    REPORT.PRINT(50022, REPORT.RUNREQUESTPAGE(50022));
                 end;
             }
             action("Export Order")
