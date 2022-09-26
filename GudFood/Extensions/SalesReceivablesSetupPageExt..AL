@@ -22,5 +22,13 @@ pageextension 50011 SalesReceivablesSetupPageExt extends "Sales & Receivables Se
                 ApplicationArea = All;
             }
         }
+        addlast(Templates)
+        {
+            field("ANSMI Excel Report"; Rec."ANSMI Excel Report")
+            {
+                Caption = 'ANSMI Excel Report';
+                ApplicationArea = All;
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
-report 50071 "ANSMI Report"
+report 50071 "Excel Report"
 {
-    Caption = 'ANSMI Report';
+    Caption = 'ANSMI Excel Report';
 
     dataset
     {

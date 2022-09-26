@@ -17,6 +17,11 @@ tableextension 50011 SalesReceivablesSetupExt extends "Sales & Receivables Setup
             Caption = 'Gudfood Item Nos.';
             TableRelation = "No. Series";
         }
+        field(50004; "ANSMI Excel Report"; Code[20])
+        {
+            Caption = 'ANSMI Excel Report';
+            TableRelation = "Excel Template";
+        }
 
     }
 }
