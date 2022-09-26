@@ -27,5 +27,15 @@ pageextension 50031 SalesOrderPageExtension extends "Sales Order"
                 RunPageLink = "No." = field("No.");
             }
         }
+        addafter("Pick Instruction")
+        {
+            action("Report ANSMI")
+            {
+                ApplicationArea = All;
+                Caption = 'Report ANSMI';
+                Image = Print;
+                RunObject = report 50071;
+            }
+        }
     }
 }
