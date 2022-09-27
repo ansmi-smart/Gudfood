@@ -1,6 +1,7 @@
 report 50071 "Excel Report"
 {
     Caption = 'ANSMI Excel Report';
+    ProcessingOnly = true;
 
     dataset
     {
@@ -63,12 +64,12 @@ report 50071 "Excel Report"
                 {
 
                 }
+
+                //totals
                 column(Amount; Amount)
                 {
 
                 }
-
-                //totals
                 column(VATAmount; VATAmount)
                 {
                     //AmountIncludingVAT-Amount
@@ -78,9 +79,47 @@ report 50071 "Excel Report"
 
                 }
             }
+
+            trigger OnAfterGetRecord()
+            begin
+                FillLinesWithData();
+            end;
         }
     }
     var
         CompanyInfo: Record "Company Information";
+        dsf: page "Excel Templates";
         VATAmount: Decimal;
+        ExcelReportBuilderManager: Codeunit "Excel Report Builder Manager";
+
+    trigger OnPreReport()
+    begin
+        InitTemplate();
+        ExcelReportBuilderManager.SetSheet('Sheet1');
+        ExcelReportBuilderManager.AddSection('SalesHeader');
+    end;
+
+    local procedure InitTemplate()
+    begin
+        ExcelReportBuilderManager.InitTemplate('ANSMISales');
+    end;
+
+    local procedure FillLinesWithData()
+    begin
+        ExcelReportBuilderManager.AddSection('SalesHesder');
+        ExcelReportBuilderManager.AddDataToSection('CompanyName', CompanyInfo.Name);
+        ExcelReportBuilderManager.AddDataToSection('Address', CompanyInfo.Address);
+        ExcelReportBuilderManager.AddDataToSection('RegistrationNo', CompanyInfo."Registration No.");
+
+        ExcelReportBuilderManager.AddDataToSection('CustomerName', SalesHeader."Sell-to Customer Name");
+        ExcelReportBuilderManager.AddDataToSection('CustomerAddress', SalesHeader."Sell-to Address");
+        ExcelReportBuilderManager.AddDataToSection('CustomerPhoneNo', SalesHeader."Sell-to Phone No.");
+
+        ExcelReportBuilderManager.AddSection('SalesLines');
+        ExcelReportBuilderManager.AddDataToSection('ItemNo', SalesLines."No.");
+        ExcelReportBuilderManager.AddDataToSection('Description', SalesLines.Description);
+        ExcelReportBuilderManager.AddDataToSection('Quantiy', Format(SalesLines.Quantity));
+        ExcelReportBuilderManager.AddDataToSection('UnitPrice', Format(SalesLines."Unit Price"));
+        ExcelReportBuilderManager.AddDataToSection('Amount', Format(SalesLines.Amount));
+    end;
 }

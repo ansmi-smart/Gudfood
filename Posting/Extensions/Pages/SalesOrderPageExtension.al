@@ -34,7 +34,12 @@ pageextension 50031 SalesOrderPageExtension extends "Sales Order"
                 ApplicationArea = All;
                 Caption = 'Report ANSMI';
                 Image = Print;
-                RunObject = report 50071;
+
+                trigger OnAction()
+                begin
+                    CurrPage.SetSelectionFilter(Rec);
+                    Report.Run(50071, true, true, Rec);
+                end;
             }
         }
     }
