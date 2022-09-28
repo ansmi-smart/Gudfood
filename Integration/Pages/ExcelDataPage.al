@@ -1,4 +1,4 @@
-page 50062 "Eccel Data ANSMI"
+page 50062 "Excel Data ANSMI"
 {
     Caption = 'Excel Data ANSMI';
     PageType = NavigatePage;
@@ -64,10 +64,9 @@ page 50062 "Eccel Data ANSMI"
     {
         area(Processing)
         {
-            action(test)
+            action(Import)
             {
                 Caption = 'Import';
-                Image = TestDatabase;
                 InFooterBar = true;
                 ApplicationArea = all;
                 trigger OnAction()
@@ -106,6 +105,40 @@ page 50062 "Eccel Data ANSMI"
                             end;
                         end;
                     end;
+                end;
+            }
+            action(Insert)
+            {
+                Caption = 'Insert to Gen. Jrnl.';
+                InFooterBar = true;
+                ApplicationArea = all;
+
+                trigger OnAction()
+                var
+                    GenJournal: Record "Gen. Journal Line";
+                    Data: Record "Excel Data ANSMI";
+                    ImportNtfc: Label 'Import Completed!';
+                    DimensionCode: Code[20];
+                begin
+                    GenJournal.Init();
+                    if Data.FindSet() then
+                        repeat
+                            DimensionCode := getZeros(4, StrLen(Data."PortfolioID/AssetID")) + Data."PortfolioID/AssetID" + '.';
+                            DimensionCode += getZeros(3, StrLen(Data."Batch ID")) + Data."Batch ID" + '.';
+                            DimensionCode += getZeros(2, StrLen(Data."Segment ID")) + Data."Segment ID";
+                            GenJournal."Journal Template Name" := 'GENERAL';
+                            GenJournal."Journal Batch Name" := 'DEFAULT';
+                            GenJournal."Line No." := 10000 * GenJournal.Count;
+                            GenJournal."Posting Date" := Data.Period;
+                            GenJournal."External Document No." := Data."Document/Transaction ID";
+                            GenJournal."Account No." := Data."GL Account";
+                            GenJournal."Amount (LCY)" := Data.Amount;
+                            GenJournal."Cust. Post. Description ANSMI" := Data."Comment to posting";
+                            GenJournal."Shortcut Dimension 1 Code" := DimensionCode;
+                            GenJournal.Insert();
+                        until (Data.Next() = 0);
+                    Message(ImportNtfc);
+                    CurrPage.Close();
                 end;
             }
         }
@@ -154,22 +187,20 @@ page 50062 "Eccel Data ANSMI"
         exit(columnIndex);
     end;
 
-    procedure GetColumnName(columnNumber: Integer): Text
+    local procedure getZeros(Amount: Integer; Existed: integer): Text
     var
-        dividend: Integer;
-        columnName: Text;
-        modulo: Integer;
-        c: Char;
+        Zeros: Text[4];
     begin
-        dividend := columnNumber;
-
-        while (dividend > 0) do begin
-            modulo := (dividend - 1) mod 26;
-            c := 65 + modulo;
-            columnName := format(c) + columnName;
-            dividend := (dividend - modulo) DIV 26;
+        case Amount - Existed of
+            0:
+                Zeros := '';
+            1:
+                Zeros := '0';
+            2:
+                Zeros := '00';
+            3:
+                Zeros := '000';
         end;
-
-        exit(columnName);
+        exit(Zeros);
     end;
 }
