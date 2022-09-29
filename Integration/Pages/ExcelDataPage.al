@@ -3,8 +3,6 @@ page 50062 "Excel Data ANSMI"
     Caption = 'Excel Data ANSMI';
     PageType = NavigatePage;
     SourceTable = "Excel Data ANSMI";
-    ApplicationArea = all;
-    UsageCategory = Administration;
 
     layout
     {

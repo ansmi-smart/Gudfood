@@ -23,6 +23,14 @@ pageextension 50059 GenJrnlPageExt extends "General Journal"
                 PromotedCategory = Process;
                 RunObject = page "Excel Data ANSMI";
             }
+            action("Text file Import ANSMI")
+            {
+                Caption = 'Text file Import ANSMI';
+                Image = Import;
+                Promoted = true;
+                PromotedCategory = Process;
+                RunObject = page "Txt Data ANSMI";
+            }
         }
     }
 }
