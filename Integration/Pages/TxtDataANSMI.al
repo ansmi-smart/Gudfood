@@ -163,27 +163,31 @@ page 50064 "Txt Data ANSMI"
         if (File.UploadIntoStream('Select .txt file for import', '', '', FileName, FileStream)) then begin
             while not FileStream.EOS do begin
                 FileStream.ReadText(Line);
-                Data.Init();
-                Data.VoNo := FindValue();
-                Data.VoDt := FindValue();
-                Data.VoDt := COPYSTR(Data.VoDt, 1, 4) + '-' + COPYSTR(Data.VoDt, 5, 2) + '-' + COPYSTR(Data.VoDt, 7, 2);
-                Data.VoTp := FindValue();
-                Data.Txt := FindValue();
-                Data.DbAcCl := FindValue();
-                Data.DbAcNo := FindValue();
-                Data.DbTxCd := FindValue();
-                Data.CrAcCl := FindValue();
-                Data.CrAcNo := FindValue();
-                Data.CrTxCd := FindValue();
-                Data.Cur := FindValue();
-                Data.ExRt := FindValue();
-                Data.CurAm := FindValue();
-                Data.AM := FindValue();
-                Data.InvoNo := FindValue();
-                Data.DueDt := FindValue();
-                Data.CID := FindValue();
-                Data.AgRef := FindValue();
-                Data.Insert();
+                if StrLen(Line) <> 0 then begin
+                    if (Line.StartsWith('"')) and (line[2] in ['0' .. '9']) then begin
+                        Data.Init();
+                        Data.VoNo := FindValue();
+                        Data.VoDt := FindValue();
+                        Data.VoDt := COPYSTR(Data.VoDt, 1, 4) + '-' + COPYSTR(Data.VoDt, 5, 2) + '-' + COPYSTR(Data.VoDt, 7, 2);
+                        Data.VoTp := FindValue();
+                        Data.Txt := FindValue();
+                        Data.DbAcCl := FindValue();
+                        Data.DbAcNo := FindValue();
+                        Data.DbTxCd := FindValue();
+                        Data.CrAcCl := FindValue();
+                        Data.CrAcNo := FindValue();
+                        Data.CrTxCd := FindValue();
+                        Data.Cur := FindValue();
+                        Data.ExRt := FindValue();
+                        Data.CurAm := FindValue();
+                        Data.AM := FindValue();
+                        Data.InvoNo := FindValue();
+                        Data.DueDt := FindValue();
+                        Data.CID := FindValue();
+                        Data.AgRef := FindValue();
+                        Data.Insert();
+                    end;
+                end;
             end;
         end;
     end;
