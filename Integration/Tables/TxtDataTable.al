@@ -45,27 +45,27 @@ table 50063 TxtDataTable
             Caption = 'CrAcCl';
             DataClassification = ToBeClassified;
         }
-        field(9; CrAcNo; Code[20])
+        field(9; CrAcNo; Text[250])
         {
             Caption = 'CrAcNo';
             DataClassification = ToBeClassified;
         }
-        field(10; CrTxCd; Code[20])
+        field(10; CrTxCd; Text[250])
         {
             Caption = 'CrTxCd';
             DataClassification = ToBeClassified;
         }
-        field(11; Cur; Code[20])
+        field(11; Cur; Text[250])
         {
             Caption = 'Cur';
             DataClassification = ToBeClassified;
         }
-        field(12; ExRt; Code[20])
+        field(12; ExRt; Text[250])
         {
             Caption = 'ExRt';
             DataClassification = ToBeClassified;
         }
-        field(13; CurAm; Code[20])
+        field(13; CurAm; Text[250])
         {
             Caption = 'CurAm';
             DataClassification = ToBeClassified;
@@ -75,7 +75,7 @@ table 50063 TxtDataTable
             Caption = 'AM';
             DataClassification = ToBeClassified;
         }
-        field(15; InvoNo; Code[20])
+        field(15; InvoNo; Text[250])
         {
             Caption = 'InvoNo';
             DataClassification = ToBeClassified;
@@ -85,12 +85,12 @@ table 50063 TxtDataTable
             Caption = 'DueDt';
             DataClassification = ToBeClassified;
         }
-        field(17; CID; Code[20])
+        field(17; CID; Text[250])
         {
             Caption = 'CID';
             DataClassification = ToBeClassified;
         }
-        field(18; AgRef; Code[20])
+        field(18; AgRef; Text[250])
         {
             Caption = 'AgRef';
             DataClassification = ToBeClassified;
@@ -98,7 +98,7 @@ table 50063 TxtDataTable
     }
     keys
     {
-        key(PK; VoNo)
+        key(PK; VoNo, Txt, DbAcCl, DbAcNo, DbTxCd, CrAcCl, CrTxCd, CrAcNo, AM)
         {
             Clustered = true;
         }
