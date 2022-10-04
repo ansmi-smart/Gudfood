@@ -9,14 +9,15 @@ report 50061 "Excel Data ANSMI"
         dataitem(ExcelBuffer; "Excel Buffer")
         { }
     }
+    var
+        ErrorList: List of [ErrorInfo];
+        ShowErrors: Codeunit "Error Messages";
+        AccountError: Label 'The field Account No. of table Gen. Journal Line cannot be found in the related table (G/L Account).';
+        DescriptionError: Label 'The length of the description must be less than or equal to 100 characters. Yours is bigger.';
+        DimensionError: Label 'There is no such value in Dimension Values.';
+        AmountError: Label 'The field Amount of table Gen. Journal Line cannot be 0 or empty.';
 
-    trigger OnPreReport()
-    begin
-        PerformImport();
-    end;
-
-
-    local procedure PerformImport()
+    procedure PerformImport(Rec: Record "Gen. Journal Line")
     var
         Buffer: Record "Excel Buffer" temporary;
         InS: InStream;
@@ -26,6 +27,8 @@ report 50061 "Excel Data ANSMI"
         DimensionCode: Code[20];
         GenJournal: Record "Gen. Journal Line";
         ImportNtfc: Label 'Import Completed!';
+        FldRef: FieldRef;
+        RecRef: RecordRef;
     begin
         if UploadIntoStream('Choose .xls file for import', '', '', Filename, InS) then begin
             Buffer.OpenBookStream(InS, 'Sheet1');
@@ -34,6 +37,10 @@ report 50061 "Excel Data ANSMI"
             Buffer.FindLast();
             LastRow := Buffer."Row No.";
             Buffer.Reset();
+            RecRef.Open(Database::"Gen. Journal Line");
+            RecRef.Init();
+            GenJournal.SetRange("Journal Template Name", Rec."Journal Template Name");
+            GenJournal.SetRange("Journal Batch Name", Rec."Journal Batch Name");
 
             for row := 2 to LastRow do begin
                 if (GetText(Buffer, 'A', row) <> '') then begin
@@ -41,20 +48,49 @@ report 50061 "Excel Data ANSMI"
                     DimensionCode += getZeros(3, StrLen(GetText(Buffer, 'G', row))) + GetText(Buffer, 'G', row) + '.';
                     DimensionCode += getZeros(2, StrLen(GetText(Buffer, 'I', row))) + GetText(Buffer, 'I', row);
 
-                    GenJournal."Journal Template Name" := 'GENERAL';
-                    GenJournal."Journal Batch Name" := 'DEFAULT';
-                    GenJournal."Line No." := 10000 * GenJournal.Count;
+                    GenJournal.Validate("Journal Template Name", Rec."Journal Template Name");
+                    GenJournal.Validate("Journal Batch Name", Rec."Journal Batch Name");
+                    GenJournal.Validate("Line No.", 10000 * (GenJournal.Count + 1));
 
-                    GenJournal."Posting Date" := GetDate(Buffer, 'C', row);
-                    GenJournal."External Document No." := GetText(Buffer, 'A', row);
-                    GenJournal."Account No." := GetText(Buffer, 'B', row);
-                    GenJournal."Amount (LCY)" := GetNumber(Buffer, 'D', row);
-                    GenJournal."Cust. Post. Description ANSMI" := GetText(Buffer, 'K', row);
-                    GenJournal."Shortcut Dimension 1 Code" := DimensionCode;
+                    GenJournal.Validate("Posting Date", GetDate(Buffer, 'C', row));
+                    GenJournal.Validate("External Document No.", GetText(Buffer, 'A', row));
+
+                    FldRef := RecRef.Field(Rec.FieldNo("Account No."));
+                    if TryValidation(FldRef, GetText(Buffer, 'B', row)) then
+                        GenJournal.Validate("Account No.", GetText(Buffer, 'B', row))
+                    else
+                        ErrorList.Add(ErrorInfo.Create(AccountError, true, GenJournal, GenJournal.FieldNo("Account No.")));
+
+                    FldRef := RecRef.Field(Rec.FieldNo("Amount (LCY)"));
+                    if TryValidation(FldRef, GetText(Buffer, 'D', row)) then
+                        GenJournal.Validate("Amount (LCY)", GetNumber(Buffer, 'D', row))
+                    else
+                        ErrorList.Add(ErrorInfo.Create(AmountError, true, GenJournal, GenJournal.FieldNo("Amount (LCY)")));
+
+
+                    FldRef := RecRef.Field(Rec.FieldNo("Description"));
+                    if TryValidation(FldRef, GetText(Buffer, 'K', row)) then
+                        GenJournal.Validate("Description", GetText(Buffer, 'K', row))
+                    else
+                        ErrorList.Add(ErrorInfo.Create(DescriptionError, true, GenJournal, GenJournal.FieldNo("Description")));
+
+                    FldRef := RecRef.Field(Rec.FieldNo("Shortcut Dimension 1 Code"));
+                    if TryValidation(FldRef, DimensionCode) then
+                        GenJournal.Validate("Shortcut Dimension 1 Code", DimensionCode)
+                    else
+                        ErrorList.Add(ErrorInfo.Create(DimensionError, true, GenJournal, GenJournal.FieldNo("Shortcut Dimension 1 Code")));
+
                     GenJournal.Insert();
                 end;
             end;
+            ShowErrors.ShowErrors(ErrorList, GenJournal);
         end;
+    end;
+
+    [TryFunction]
+    procedure TryValidation(fldRef: FieldRef; NewValue: Variant)
+    begin
+        fldRef.Validate(NewValue);
     end;
 
     procedure GetText(var Buffer: Record "Excel Buffer" temporary; Col: Text; Row: Integer): Text
