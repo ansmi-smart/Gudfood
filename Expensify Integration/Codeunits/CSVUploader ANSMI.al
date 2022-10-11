@@ -1,0 +1,163 @@
+codeunit 50062 "CSV Uploader ANSMI"
+{
+    var
+        Line: text;
+        Buffer: Record "CSV Buffer" temporary;
+        ImportURL: Label 'https://integrations.expensify.com/Integration-Server/ExpensifyIntegrations';
+
+    procedure UploadCSV(Rec: Record "Gen. Journal Line")
+    var
+        GenJournal: Record "Gen. Journal Line";
+        Vendor: Record Vendor;
+        CSVInStream: InStream;
+        Filename: Text;
+        Row: Integer;
+        ImportNtfc: Label 'Import Completed!';
+        TempDate: Text;
+        TempAmount: Decimal;
+    begin
+        if UploadIntoStream('Choose .csv file for import', '', '', Filename, CSVInStream) then begin
+            Buffer.LoadDataFromStream(CSVInStream, ',');
+            GenJournal.SetRange("Journal Template Name", Rec."Journal Template Name");
+            GenJournal.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+            for Row := 2 to Buffer.GetNumberOfLines() do begin
+                GenJournal.Validate("Journal Template Name", Rec."Journal Template Name");
+                GenJournal.Validate("Journal Batch Name", Rec."Journal Batch Name");
+                GenJournal.Validate("Line No.", 10000 * (GenJournal.Count + 1));
+
+                TempDate := DelChr(GetValue(Row, 1).split(' ').get(1), '=', '"');
+                TempDate := COPYSTR(TempDate, 1, 5) + COPYSTR(TempDate, 6, 2) + COPYSTR(TempDate, 8, 3);
+                Evaluate(GenJournal."Posting Date", TempDate);
+
+                GenJournal.Validate("External Document No.", DelChr(GetValue(Row, 2), '=', '"'));
+                Evaluate(TempAmount, GetValue(Row, 3));
+                GenJournal.Validate("Amount (LCY)", TempAmount);
+                GenJournal.Validate(Description, GetValue(Row, 7));
+                if (GetValue(Row, 8) = 'yes') then
+                    GenJournal.Validate("Reimbursable ANSMI", true)
+                else
+                    GenJournal.Validate("Reimbursable ANSMI", false);
+                GenJournal.Validate("Currency Code", GetValue(Row, 9));
+                Evaluate(TempAmount, GetValue(Row, 10));
+                GenJournal.Validate(Amount, TempAmount);
+                GenJournal.Validate("Receipt ANSMI", GetValue(Row, 11));
+                GenJournal.Validate("Account Type", GenJournal."Account Type"::"G/L Account");
+                GenJournal.Validate("Bal. Account Type", GenJournal."Bal. Account Type"::Vendor);
+                GenJournal.Validate("Bal. Account No.", Vendor.GetVendorNo(DelChr(GetValue(Row, 12), '=', '"')));
+                GenJournal.Validate("Document No.", 'EXP-' + Format(GenJournal."Posting Date"));
+                GenJournal.Insert();
+            end;
+        end;
+        Message(ImportNtfc);
+    end;
+
+    procedure GetValue(Row: Integer; FieldNo: Integer): Text
+    begin
+        if Buffer.Get(Row, FieldNo) then
+            exit(Buffer.Value);
+    end;
+
+    procedure GetDataFromAPI(Rec: Record "Gen. Journal Line")
+    var
+        Client: HttpClient;
+        Response: HttpResponseMessage;
+        Inst: InStream;
+        RequestHttpContent: HttpContent;
+        RequestHttpHeaders: HttpHeaders;
+        requestJobDescription: Label 'requestJobDescription={"type":"file","credentials":{"partnerUserID":"aa_nastyasmilka_gmail_com","partnerUserSecret":"42979985cc214694934f6d61686ffe95023d12e2"},"onReceive":{"immediateResponse":["returnRandomFileName"]},"inputSettings":{"type":"combinedReportData","filters":{"startDate":"2022-01-01","endDate":"2022-11-01","markedAsExported":"Expensify Export"}},"outputSettings":{"fileExtension":"csv"}}';
+        Template: Label '&template=<#-- Header --> <#list reports as report> <#list report.transactionList as expense> ${report.created},<#t> ${expense.merchant},<#t> ${(expense.amount/100)?string("0.00")},<#t> ${expense.mcc},<#t>${expense.category},<#t>${expense.tag},<#t>${expense.comment},<#t> ${expense.reimbursable},<#t> ${expense.currency},<#t> ${expense.amount(expense.currency).nosymbol}},<#t> ${expense.receipt.url},<#t> ${expense.attendees}<#lt> </#list> </#list>';
+        FileName: Text;
+        DownloadBody: Label 'requestJobDescription={"type":"download","credentials":{"partnerUserID":"aa_nastyasmilka_gmail_com","partnerUserSecret":"42979985cc214694934f6d61686ffe95023d12e2"},"fileName":"%1"}';
+        Row: Integer;
+        GenJournal: Record "Gen. Journal Line";
+        TempDate: Text;
+        PostinDate: Date;
+        TempAmount: Decimal;
+        Vendor: Record Vendor;
+    begin
+        Client.DefaultRequestHeaders.Add('Accept', 'application/Json');
+        RequestHttpContent.Clear();
+        RequestHttpContent.WriteFrom(requestJobDescription + Template);
+        RequestHttpHeaders.Clear();
+        RequestHttpContent.GetHeaders(RequestHttpHeaders);
+        RequestHttpHeaders.Remove('Content-Type');
+        RequestHttpHeaders.Add('Content-Type', 'application/x-www-form-urlencoded');
+        RequestHttpContent.GetHeaders(RequestHttpHeaders);
+
+        Client.Post(ImportURL, RequestHttpContent, Response);
+        if Response.IsSuccessStatusCode then begin
+            Response.Content().ReadAs(Inst);
+            Buffer.LoadDataFromStream(Inst, '&');
+            FileName := Format(Buffer.Value);
+        end;
+
+        Client.DefaultRequestHeaders.Add('Accept', 'application/Json');
+        RequestHttpContent.Clear();
+        RequestHttpContent.WriteFrom(StrSubstNo(DownloadBody, FileName));
+        RequestHttpHeaders.Clear();
+        RequestHttpContent.GetHeaders(RequestHttpHeaders);
+        RequestHttpHeaders.Remove('Content-Type');
+        RequestHttpHeaders.Add('Content-Type', 'application/x-www-form-urlencoded');
+        RequestHttpContent.GetHeaders(RequestHttpHeaders);
+        Client.Post(ImportURL, RequestHttpContent, Response);
+        Buffer.FindSet();
+        Buffer.DeleteAll();
+        if Response.IsSuccessStatusCode then begin
+            Response.Content().ReadAs(Inst);
+            Buffer.LoadDataFromStream(Inst, '#');
+            GenJournal.Init();
+            Line := Buffer.Value;
+            GenJournal.SetRange("Journal Template Name", Rec."Journal Template Name");
+            GenJournal.SetRange("Journal Batch Name", Rec."Journal Batch Name");
+
+            TempDate := FindValue();
+            while (TempDate <> '_') do begin
+                GenJournal.Validate("Journal Template Name", Rec."Journal Template Name");
+                GenJournal.Validate("Journal Batch Name", Rec."Journal Batch Name");
+                GenJournal.Validate("Line No.", 10000 * GenJournal.Count);
+
+                TempDate := DelChr(TempDate.TrimStart(), '=', ',');
+                TempDate := COPYSTR(TempDate, 1, 5) + COPYSTR(TempDate, 6, 2) + COPYSTR(TempDate, 8, 3);
+                Evaluate(PostinDate, TempDate);
+                GenJournal.Validate("Posting Date", PostinDate);
+
+
+                GenJournal.Validate("External Document No.", DelChr(FindValue(), '=', ','));
+                Evaluate(TempAmount, DelChr(FindValue(), '=', ','));
+                FindValue();
+                FindValue();
+                GenJournal.Validate("Amount (LCY)", TempAmount);
+                GenJournal.Validate(Description, DelChr(FindValue(), '=', ','));
+                if (DelChr(FindValue(), '=', ',') = 'yes') then
+                    GenJournal.Validate("Reimbursable ANSMI", true)
+                else
+                    GenJournal.Validate("Reimbursable ANSMI", false);
+                GenJournal."Currency Code" := DelChr(FindValue(), '=', ',');
+                Evaluate(TempAmount, DelChr(FindValue(), '=', ','));
+                GenJournal.Validate(Amount, TempAmount);
+                GenJournal.Validate("Receipt ANSMI", DelChr(FindValue(), '=', ','));
+                GenJournal.Validate("Account Type", GenJournal."Account Type"::"G/L Account");
+                GenJournal.Validate("Bal. Account Type", GenJournal."Bal. Account Type"::Vendor);
+                GenJournal.Validate("Bal. Account No.", Vendor.GetVendorNo(DelChr(FindValue(), '=', ',')));
+                GenJournal.Validate("Document No.", 'EXP-' + Format(GenJournal."Posting Date"));
+
+                GenJournal.insert();
+                TempDate := FindValue();
+            end;
+        end;
+    end;
+
+    local procedure FindValue(): Text
+    var
+        Result: Text;
+    begin
+        if (StrLen(Line) = 0) then exit('_');
+        Result := Line.Substring(1, Line.IndexOf(','));
+        Line := Line.Replace(Line.Substring(1, Line.IndexOf(',')), ' ');
+        Message(Result);
+        if (StrLen(Result) = 0) then
+            exit(' ')
+        else
+            exit(Result);
+    end;
+}

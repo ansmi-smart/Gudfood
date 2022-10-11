@@ -8,6 +8,14 @@ pageextension 50059 GenJrnlPageExt extends "General Journal"
             {
                 ApplicationArea = all;
             }
+            field("Reimbursable ANSMI"; Rec."Reimbursable ANSMI")
+            {
+                ApplicationArea = All;
+            }
+            field("Receipt ANSMI"; Rec."Receipt ANSMI")
+            {
+                ApplicationArea = All;
+            }
         }
     }
 
@@ -41,6 +49,35 @@ pageextension 50059 GenJrnlPageExt extends "General Journal"
                 begin
                     ImportTxt.PerformImport(Rec);
                 end;
+            }
+            action("Upload CSV")
+            {
+                Caption = 'Upload CSV ANSMI';
+                Image = Import;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    Uploader: Codeunit "CSV Uploader ANSMI";
+                begin
+                    Uploader.UploadCSV(Rec);
+                end;
+            }
+            action("Get API ANSMI")
+            {
+                Caption = 'Get API ANSMI';
+                Image = Report;
+                Promoted = true;
+                PromotedCategory = Process;
+
+                trigger OnAction()
+                var
+                    Uploader: Codeunit "CSV Uploader ANSMI";
+                begin
+                    Uploader.GetDataFromAPI(Rec);
+                end;
+
             }
         }
     }

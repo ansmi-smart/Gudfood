@@ -12,5 +12,15 @@ tableextension 50057 GenJournalLineTableExt extends "Gen. Journal Line"
             Caption = 'Lines Counter ANSMI';
             FieldClass = Normal;
         }
+        field(50002; "Reimbursable ANSMI"; Boolean)
+        {
+            Caption = 'Reimbursable ANSMI';
+            DataClassification = ToBeClassified;
+        }
+        field(50003; "Receipt ANSMI"; Text[512])
+        {
+            Caption = 'Receipt ANSMI';
+            DataClassification = ToBeClassified;
+        }
     }
 }

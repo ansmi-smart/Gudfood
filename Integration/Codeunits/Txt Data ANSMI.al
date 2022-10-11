@@ -5,10 +5,8 @@ codeunit 50060 "Txt Data ANSMI"
 
     local procedure FindValue(): Text
     var
-        NumberOfBytesRead: Integer;
         StartPos, EndPos : Integer;
         Result: Text;
-        i: Integer;
     begin
         StartPos := Line.IndexOf('"');
         line[StartPos] := ' ';
@@ -151,6 +149,4 @@ codeunit 50060 "Txt Data ANSMI"
         CurrencyError: Label 'The field Currency Code of table Gen. Journal Line cannot be found in the related table (Currency)';
         AmountError: Label 'The field Amount of table Gen. Journal Line cannot be 0 or empty.';
         DescriptionError: Label 'The length of the description must be less than or equal to 100 characters. Yours is bigger.';
-
-
 }
