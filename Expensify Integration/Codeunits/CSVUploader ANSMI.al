@@ -65,7 +65,7 @@ codeunit 50062 "CSV Uploader ANSMI"
         RequestHttpContent: HttpContent;
         RequestHttpHeaders: HttpHeaders;
         requestJobDescription: Label 'requestJobDescription={"type":"file","credentials":{"partnerUserID":"aa_nastyasmilka_gmail_com","partnerUserSecret":"42979985cc214694934f6d61686ffe95023d12e2"},"onReceive":{"immediateResponse":["returnRandomFileName"]},"inputSettings":{"type":"combinedReportData","filters":{"startDate":"2022-01-01","endDate":"2022-11-01","markedAsExported":"Expensify Export"}},"outputSettings":{"fileExtension":"csv"}}';
-        Template: Label '&template=<#-- Header --> <#list reports as report> <#list report.transactionList as expense> ${report.created},<#t> ${expense.merchant},<#t> ${(expense.amount/100)?string("0.00")},<#t> ${expense.mcc},<#t>${expense.category},<#t>${expense.tag},<#t>${expense.comment},<#t> ${expense.reimbursable},<#t> ${expense.currency},<#t> ${expense.amount(expense.currency).nosymbol}},<#t> ${expense.receipt.url},<#t> ${expense.attendees}<#lt> </#list> </#list>';
+        Template: Label '&template=<#-- Header --> <#list reports as report> <#list report.transactionList as expense> ${report.created},<#t> ${expense.merchant},<#t> ${(expense.amount/100)?string("0.00")},<#t> ${expense.comment},<#t> ${expense.reimbursable},<#t> ${expense.currency},<#t> ${(expense.amount/100)?string("0.00")},<#t> ${expense.receipt.url},<#t> ${expense.attendees}<#lt> </#list> </#list>';
         FileName: Text;
         DownloadBody: Label 'requestJobDescription={"type":"download","credentials":{"partnerUserID":"aa_nastyasmilka_gmail_com","partnerUserSecret":"42979985cc214694934f6d61686ffe95023d12e2"},"fileName":"%1"}';
         Row: Integer;
@@ -110,6 +110,7 @@ codeunit 50062 "CSV Uploader ANSMI"
             GenJournal.SetRange("Journal Template Name", Rec."Journal Template Name");
             GenJournal.SetRange("Journal Batch Name", Rec."Journal Batch Name");
 
+            Line := Line.TrimStart();
             TempDate := FindValue();
             while (TempDate <> '_') do begin
                 GenJournal.Validate("Journal Template Name", Rec."Journal Template Name");
@@ -121,12 +122,9 @@ codeunit 50062 "CSV Uploader ANSMI"
                 Evaluate(PostinDate, TempDate);
                 GenJournal.Validate("Posting Date", PostinDate);
 
-
                 GenJournal.Validate("External Document No.", DelChr(FindValue(), '=', ','));
                 Evaluate(TempAmount, DelChr(FindValue(), '=', ','));
-                FindValue();
-                FindValue();
-                GenJournal.Validate("Amount (LCY)", TempAmount);
+                GenJournal."Amount (LCY)" := TempAmount;
                 GenJournal.Validate(Description, DelChr(FindValue(), '=', ','));
                 if (DelChr(FindValue(), '=', ',') = 'yes') then
                     GenJournal.Validate("Reimbursable ANSMI", true)
@@ -134,13 +132,13 @@ codeunit 50062 "CSV Uploader ANSMI"
                     GenJournal.Validate("Reimbursable ANSMI", false);
                 GenJournal."Currency Code" := DelChr(FindValue(), '=', ',');
                 Evaluate(TempAmount, DelChr(FindValue(), '=', ','));
-                GenJournal.Validate(Amount, TempAmount);
+                GenJournal.Amount := TempAmount;
                 GenJournal.Validate("Receipt ANSMI", DelChr(FindValue(), '=', ','));
                 GenJournal.Validate("Account Type", GenJournal."Account Type"::"G/L Account");
                 GenJournal.Validate("Bal. Account Type", GenJournal."Bal. Account Type"::Vendor);
-                GenJournal.Validate("Bal. Account No.", Vendor.GetVendorNo(DelChr(FindValue(), '=', ',')));
+                //GenJournal.Validate("Bal. Account No.", Vendor.GetVendorNo(DelChr(FindValue(), '=', ',')));
+                FindValue();
                 GenJournal.Validate("Document No.", 'EXP-' + Format(GenJournal."Posting Date"));
-
                 GenJournal.insert();
                 TempDate := FindValue();
             end;
@@ -151,13 +149,17 @@ codeunit 50062 "CSV Uploader ANSMI"
     var
         Result: Text;
     begin
-        if (StrLen(Line) = 0) then exit('_');
-        Result := Line.Substring(1, Line.IndexOf(','));
-        Line := Line.Replace(Line.Substring(1, Line.IndexOf(',')), ' ');
-        Message(Result);
-        if (StrLen(Result) = 0) then
-            exit(' ')
+        if (Line.IndexOf(',') = 0) then
+            exit('_')
         else
-            exit(Result);
+            if (Line.IndexOf(',') > 10) and (Line.Substring(1, Line.IndexOf(',')).Contains(' 2')) then begin
+                Line := Line.TrimStart();
+                exit(' ');
+            end
+            else begin
+                Result := Line.Substring(1, Line.IndexOf(','));
+                Line := DelStr(Line, 1, Line.IndexOf(','));
+                exit(Result);
+            end;
     end;
 }
