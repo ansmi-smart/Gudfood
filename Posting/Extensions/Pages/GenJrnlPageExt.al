@@ -80,5 +80,14 @@ pageextension 50059 GenJrnlPageExt extends "General Journal"
 
             }
         }
+        addafter("Opening Balance")
+        {
+            action("SMA Expensify Setup ANSMI")
+            {
+                Caption = 'SMA Expensify Setup ANSMI';
+                Image = Setup;
+                RunObject = page "SMA Expensify Setup ANSMI";
+            }
+        }
     }
 }

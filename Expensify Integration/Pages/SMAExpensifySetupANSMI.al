@@ -1,9 +1,6 @@
 page 50068 "SMA Expensify Setup ANSMI"
 {
     Caption = 'SMA Expensify Setup ANSMI';
-    PageType = Card;
-    ApplicationArea = all;
-    UsageCategory = Administration;
     SourceTable = "SMA Expensify Setup ANSMI";
 
     layout

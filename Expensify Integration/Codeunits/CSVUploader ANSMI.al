@@ -74,6 +74,7 @@ codeunit 50062 "CSV Uploader ANSMI"
         PostinDate: Date;
         TempAmount: Decimal;
         Vendor: Record Vendor;
+        CurrencyCode: Code[20];
     begin
         Client.DefaultRequestHeaders.Add('Accept', 'application/Json');
         RequestHttpContent.Clear();
@@ -130,7 +131,7 @@ codeunit 50062 "CSV Uploader ANSMI"
                     GenJournal.Validate("Reimbursable ANSMI", true)
                 else
                     GenJournal.Validate("Reimbursable ANSMI", false);
-                GenJournal.Validate("Currency Code", DelChr(FindValue(), '=', ','));
+                CurrencyCode := DelChr(FindValue(), '=', ',');
                 Evaluate(TempAmount, DelChr(FindValue(), '=', ','));
                 GenJournal.Validate(Amount, TempAmount);
                 GenJournal.Validate("Receipt ANSMI", DelChr(FindValue(), '=', ','));
@@ -141,6 +142,7 @@ codeunit 50062 "CSV Uploader ANSMI"
                     TempData := ' ';
                 GenJournal.Validate("Bal. Account No.", Vendor.GetVendorNoOpenCard(DelChr(TempData, '=', ','), false));
                 GenJournal.Validate("Document No.", 'EXP-' + Format(GenJournal."Posting Date"));
+                GenJournal.Validate("Currency Code", CurrencyCode);
                 GenJournal.insert();
                 TempData := FindValue();
             end;
