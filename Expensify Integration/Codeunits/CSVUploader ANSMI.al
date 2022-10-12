@@ -13,7 +13,7 @@ codeunit 50062 "CSV Uploader ANSMI"
         Filename: Text;
         Row: Integer;
         ImportNtfc: Label 'Import Completed!';
-        TempDate: Text;
+        TempData: Text;
         TempAmount: Decimal;
     begin
         if UploadIntoStream('Choose .csv file for import', '', '', Filename, CSVInStream) then begin
@@ -25,9 +25,9 @@ codeunit 50062 "CSV Uploader ANSMI"
                 GenJournal.Validate("Journal Batch Name", Rec."Journal Batch Name");
                 GenJournal.Validate("Line No.", 10000 * (GenJournal.Count + 1));
 
-                TempDate := DelChr(GetValue(Row, 1).split(' ').get(1), '=', '"');
-                TempDate := COPYSTR(TempDate, 1, 5) + COPYSTR(TempDate, 6, 2) + COPYSTR(TempDate, 8, 3);
-                Evaluate(GenJournal."Posting Date", TempDate);
+                TempData := DelChr(GetValue(Row, 1).split(' ').get(1), '=', '"');
+                TempData := COPYSTR(TempData, 1, 5) + COPYSTR(TempData, 6, 2) + COPYSTR(TempData, 8, 3);
+                Evaluate(GenJournal."Posting Date", TempData);
 
                 GenJournal.Validate("External Document No.", DelChr(GetValue(Row, 2), '=', '"'));
                 Evaluate(TempAmount, GetValue(Row, 3));
@@ -70,7 +70,7 @@ codeunit 50062 "CSV Uploader ANSMI"
         DownloadBody: Label 'requestJobDescription={"type":"download","credentials":{"partnerUserID":"aa_nastyasmilka_gmail_com","partnerUserSecret":"42979985cc214694934f6d61686ffe95023d12e2"},"fileName":"%1"}';
         Row: Integer;
         GenJournal: Record "Gen. Journal Line";
-        TempDate: Text;
+        TempData: Text;
         PostinDate: Date;
         TempAmount: Decimal;
         Vendor: Record Vendor;
@@ -111,15 +111,15 @@ codeunit 50062 "CSV Uploader ANSMI"
             GenJournal.SetRange("Journal Batch Name", Rec."Journal Batch Name");
 
             Line := Line.TrimStart();
-            TempDate := FindValue();
-            while (TempDate <> '_') do begin
+            TempData := FindValue();
+            while (TempData <> '_') do begin
                 GenJournal.Validate("Journal Template Name", Rec."Journal Template Name");
                 GenJournal.Validate("Journal Batch Name", Rec."Journal Batch Name");
                 GenJournal.Validate("Line No.", 10000 * GenJournal.Count);
 
-                TempDate := DelChr(TempDate.TrimStart(), '=', ',');
-                TempDate := COPYSTR(TempDate, 1, 5) + COPYSTR(TempDate, 6, 2) + COPYSTR(TempDate, 8, 3);
-                Evaluate(PostinDate, TempDate);
+                TempData := DelChr(TempData.TrimStart(), '=', ',');
+                TempData := COPYSTR(TempData, 1, 5) + COPYSTR(TempData, 6, 2) + COPYSTR(TempData, 8, 3);
+                Evaluate(PostinDate, TempData);
                 GenJournal.Validate("Posting Date", PostinDate);
 
                 GenJournal.Validate("External Document No.", DelChr(FindValue(), '=', ','));
@@ -130,17 +130,19 @@ codeunit 50062 "CSV Uploader ANSMI"
                     GenJournal.Validate("Reimbursable ANSMI", true)
                 else
                     GenJournal.Validate("Reimbursable ANSMI", false);
-                GenJournal."Currency Code" := DelChr(FindValue(), '=', ',');
+                GenJournal.Validate("Currency Code", DelChr(FindValue(), '=', ','));
                 Evaluate(TempAmount, DelChr(FindValue(), '=', ','));
-                GenJournal.Amount := TempAmount;
+                GenJournal.Validate(Amount, TempAmount);
                 GenJournal.Validate("Receipt ANSMI", DelChr(FindValue(), '=', ','));
                 GenJournal.Validate("Account Type", GenJournal."Account Type"::"G/L Account");
                 GenJournal.Validate("Bal. Account Type", GenJournal."Bal. Account Type"::Vendor);
-                //GenJournal.Validate("Bal. Account No.", Vendor.GetVendorNo(DelChr(FindValue(), '=', ',')));
-                FindValue();
+                TempData := FindValue();
+                if (TempData = '_') then
+                    TempData := ' ';
+                GenJournal.Validate("Bal. Account No.", Vendor.GetVendorNoOpenCard(DelChr(TempData, '=', ','), false));
                 GenJournal.Validate("Document No.", 'EXP-' + Format(GenJournal."Posting Date"));
                 GenJournal.insert();
-                TempDate := FindValue();
+                TempData := FindValue();
             end;
         end;
     end;
